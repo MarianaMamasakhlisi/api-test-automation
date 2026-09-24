@@ -1,4 +1,4 @@
-package apitests.stepdefinitions;
+package apitests.stepdefinitions.positive;
 
 import apitests.client.PetClient;
 import apitests.models.Pet;
@@ -12,15 +12,14 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
-public class PetCrudSteps {
+public class PetPositiveSteps {
 
     private final TestContext testContext;
     private final PetClient petClient = new PetClient();
 
-    public PetCrudSteps(TestContext testContext) {
+    public PetPositiveSteps(TestContext testContext) {
         this.testContext = testContext;
     }
 
@@ -44,11 +43,6 @@ public class PetCrudSteps {
         testContext.setLastResponse(petClient.getPetById(id));
     }
 
-    @When("I request a pet with id {long}")
-    public void iRequestAPetWithId(long id) {
-        testContext.setLastResponse(petClient.getPetById(id));
-    }
-
     @When("I update that pet's name to {string} and status to {string}")
     public void iUpdateThatPetsNameToAndStatusTo(String newName, String newStatus) {
         Pet updated = testContext.getLastCreatedPet();
@@ -63,31 +57,11 @@ public class PetCrudSteps {
         testContext.setLastResponse(petClient.deletePetById(id));
     }
 
-    @When("I delete a pet with id {long}")
-    public void iDeleteAPetWithId(long id) {
-        testContext.setLastResponse(petClient.deletePetById(id));
-    }
-
-    @When("I send a malformed create pet request")
-    public void iSendAMalformedCreatePetRequest() {
-        testContext.setLastResponse(petClient.createPetWithRawBody("{not-valid-json"));
-    }
-
-    @Then("the response status code should be {int}")
-    public void theResponseStatusCodeShouldBe(int expectedStatus) {
-        assertThat(testContext.getLastResponse().statusCode(), equalTo(expectedStatus));
-    }
-
     @Then("requesting that pet again should return status code {int}")
     public void requestingThatPetAgainShouldReturnStatusCode(int expectedStatus) {
         long id = testContext.getLastCreatedPet().getId();
         Response response = petClient.getPetById(id);
         assertThat(response.statusCode(), equalTo(expectedStatus));
-    }
-
-    @Then("the response content type should be {string}")
-    public void theResponseContentTypeShouldBe(String expectedContentType) {
-        assertThat(testContext.getLastResponse().contentType(), containsString(expectedContentType));
     }
 
     @Then("the response pet should have name {string} and status {string}")
@@ -103,12 +77,6 @@ public class PetCrudSteps {
         Pet pet = petClient.getPetById(id).as(Pet.class);
         assertThat(pet.getName(), equalTo(expectedName));
         assertThat(pet.getStatus(), equalTo(expectedStatus));
-    }
-
-    @Then("the response body message should be {string}")
-    public void theResponseBodyMessageShouldBe(String expectedMessage) {
-        String actualMessage = testContext.getLastResponse().jsonPath().getString("message");
-        assertThat(actualMessage, equalTo(expectedMessage));
     }
 
     private Pet newPet(String name, String status) {

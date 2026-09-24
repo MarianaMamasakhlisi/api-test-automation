@@ -1,4 +1,4 @@
-Feature: Pet CRUD operations
+Feature: Pet CRUD operations - positive scenarios
   As an API consumer of the Swagger Petstore
   I want to create, read, update and delete pets
   So that I can manage the pet catalog through the REST API
@@ -27,17 +27,3 @@ Feature: Pet CRUD operations
     When I delete that pet
     Then the response status code should be 200
     And requesting that pet again should return status code 404
-
-  Scenario: Retrieve a pet that does not exist
-    When I request a pet with id 999999999999
-    Then the response status code should be 404
-    And the response body message should be "Pet not found"
-
-  Scenario: Delete a pet that does not exist
-    When I delete a pet with id 999999999999
-    Then the response status code should be 404
-
-  Scenario: Create a pet with a malformed request body
-    When I send a malformed create pet request
-    Then the response status code should be 400
-    And the response body message should be "bad input"

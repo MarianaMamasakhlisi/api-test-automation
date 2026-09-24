@@ -21,9 +21,12 @@ src/test/java/apitests/
   models/                       Pet, Category, Tag request/response POJOs
   support/TestContext.java      Scenario-scoped state shared between steps and hooks
   hooks/Hooks.java              Sets the base URI; deletes any pet a scenario created
-  stepdefinitions/PetCrudSteps.java
+  stepdefinitions/common/       Assertions shared by positive and negative scenarios
+  stepdefinitions/positive/     Step definitions for the happy-path scenarios
+  stepdefinitions/negative/     Step definitions for the error-path scenarios
 src/test/resources/
-  features/pet_crud.feature     Gherkin scenarios
+  features/positive/            Happy-path Gherkin scenarios
+  features/negative/            Negative/error-path Gherkin scenarios
   config.properties             baseUri
   allure.properties             Allure results directory
 ```
