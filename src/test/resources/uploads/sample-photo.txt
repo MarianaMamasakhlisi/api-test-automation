@@ -1,0 +1,1 @@
+placeholder file used by the pet image upload test

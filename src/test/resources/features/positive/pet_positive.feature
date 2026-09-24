@@ -27,3 +27,24 @@ Feature: Pet CRUD operations - positive scenarios
     When I delete that pet
     Then the response status code should be 200
     And requesting that pet again should return status code 404
+
+  Scenario: Find pets by status
+    When I search for pets with status "available"
+    Then the response status code should be 200
+    And every pet in the response should have status "available"
+
+  Scenario: Find pets by tag
+    When I search for pets with tag "friendly"
+    Then the response status code should be 200
+
+  Scenario: Update a pet's name and status using form data
+    Given a pet named "FormPet" with status "available" has been created
+    When I update that pet via form data to name "FormPetUpdated" and status "sold"
+    Then the response status code should be 200
+    And requesting that pet again should return name "FormPetUpdated" and status "sold"
+
+  Scenario: Upload an image for a pet
+    Given a pet named "PhotoPet" with status "available" has been created
+    When I upload an image for that pet
+    Then the response status code should be 200
+    And the response body message should contain "File uploaded"

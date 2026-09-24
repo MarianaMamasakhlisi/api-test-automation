@@ -16,3 +16,7 @@ Feature: Pet CRUD operations - negative scenarios
     When I send a malformed create pet request
     Then the response status code should be 400
     And the response body message should be "bad input"
+
+  Scenario: Updating a pet that does not exist via form data
+    When I update the pet with id 999999999999 via form data to name "Ghost" and status "sold"
+    Then the response status code should be 404

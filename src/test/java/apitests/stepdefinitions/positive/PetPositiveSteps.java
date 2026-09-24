@@ -8,11 +8,16 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 
+import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.hasProperty;
 
 public class PetPositiveSteps {
 
@@ -77,6 +82,48 @@ public class PetPositiveSteps {
         Pet pet = petClient.getPetById(id).as(Pet.class);
         assertThat(pet.getName(), equalTo(expectedName));
         assertThat(pet.getStatus(), equalTo(expectedStatus));
+    }
+
+    @When("I search for pets with status {string}")
+    public void iSearchForPetsWithStatus(String status) {
+        testContext.setLastResponse(petClient.findByStatus(status));
+    }
+
+    @Then("every pet in the response should have status {string}")
+    public void everyPetInTheResponseShouldHaveStatus(String expectedStatus) {
+        Pet[] pets = testContext.getLastResponse().as(Pet[].class);
+        assertThat(List.of(pets), everyItem(hasProperty("status", equalTo(expectedStatus))));
+    }
+
+    @When("I search for pets with tag {string}")
+    public void iSearchForPetsWithTag(String tag) {
+        testContext.setLastResponse(petClient.findByTags(tag));
+    }
+
+    @When("I update that pet via form data to name {string} and status {string}")
+    public void iUpdateThatPetViaFormDataToNameAndStatus(String newName, String newStatus) {
+        long id = testContext.getLastCreatedPet().getId();
+        testContext.setLastResponse(petClient.updatePetWithForm(id, newName, newStatus));
+    }
+
+    @When("I upload an image for that pet")
+    public void iUploadAnImageForThatPet() {
+        long id = testContext.getLastCreatedPet().getId();
+        testContext.setLastResponse(petClient.uploadImage(id, sampleImageFile()));
+    }
+
+    @Then("the response body message should contain {string}")
+    public void theResponseBodyMessageShouldContain(String expectedFragment) {
+        String actualMessage = testContext.getLastResponse().jsonPath().getString("message");
+        assertThat(actualMessage, containsString(expectedFragment));
+    }
+
+    private File sampleImageFile() {
+        URL resource = getClass().getClassLoader().getResource("uploads/sample-photo.txt");
+        if (resource == null) {
+            throw new IllegalStateException("Test fixture uploads/sample-photo.txt not found on classpath");
+        }
+        return new File(resource.getFile());
     }
 
     private Pet newPet(String name, String status) {

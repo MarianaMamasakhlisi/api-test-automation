@@ -2,11 +2,7 @@ package apitests.stepdefinitions.negative;
 
 import apitests.client.PetClient;
 import apitests.support.TestContext;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 public class PetNegativeSteps {
 
@@ -32,9 +28,8 @@ public class PetNegativeSteps {
         testContext.setLastResponse(petClient.createPetWithRawBody("{not-valid-json"));
     }
 
-    @Then("the response body message should be {string}")
-    public void theResponseBodyMessageShouldBe(String expectedMessage) {
-        String actualMessage = testContext.getLastResponse().jsonPath().getString("message");
-        assertThat(actualMessage, equalTo(expectedMessage));
+    @When("I update the pet with id {long} via form data to name {string} and status {string}")
+    public void iUpdateThePetWithIdViaFormDataToNameAndStatus(long id, String name, String status) {
+        testContext.setLastResponse(petClient.updatePetWithForm(id, name, status));
     }
 }

@@ -6,6 +6,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
+import java.io.File;
+
 /**
  * Thin wrapper around the /pet endpoints of the Swagger Petstore API.
  * Keeps RestAssured request-building out of the step definitions.
@@ -44,5 +46,25 @@ public class PetClient {
 
     public Response findByStatus(String status) {
         return request().queryParam("status", status).get("/pet/findByStatus");
+    }
+
+    public Response findByTags(String tag) {
+        return request().queryParam("tags", tag).get("/pet/findByTags");
+    }
+
+    public Response updatePetWithForm(long id, String name, String status) {
+        return RestAssured.given()
+                .filter(new AllureRestAssured())
+                .contentType("application/x-www-form-urlencoded")
+                .formParam("name", name)
+                .formParam("status", status)
+                .post("/pet/{id}", id);
+    }
+
+    public Response uploadImage(long id, File file) {
+        return RestAssured.given()
+                .filter(new AllureRestAssured())
+                .multiPart("file", file)
+                .post("/pet/{id}/uploadImage", id);
     }
 }
