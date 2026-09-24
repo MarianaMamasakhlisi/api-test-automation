@@ -119,9 +119,9 @@ public class PetPositiveSteps {
     }
 
     private File sampleImageFile() {
-        URL resource = getClass().getClassLoader().getResource("uploads/sample-photo.txt");
+        URL resource = getClass().getClassLoader().getResource("uploads/sample-photo.png");
         if (resource == null) {
-            throw new IllegalStateException("Test fixture uploads/sample-photo.txt not found on classpath");
+            throw new IllegalStateException("Test fixture uploads/sample-photo.png not found on classpath");
         }
         return new File(resource.getFile());
     }
