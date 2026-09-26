@@ -28,4 +28,10 @@ public class CommonSteps {
     public void theResponseContentTypeShouldBe(String expectedContentType) {
         assertThat(testContext.getLastResponse().contentType(), containsString(expectedContentType));
     }
+
+    @Then("the response body message should contain {string}")
+    public void theResponseBodyMessageShouldContain(String expectedFragment) {
+        String actualMessage = testContext.getLastResponse().jsonPath().getString("message");
+        assertThat(actualMessage, containsString(expectedFragment));
+    }
 }

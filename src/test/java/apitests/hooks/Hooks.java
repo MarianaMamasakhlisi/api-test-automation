@@ -39,5 +39,8 @@ public class Hooks {
         if (testContext.getLastCreatedUser() != null && testContext.getLastCreatedUser().getUsername() != null) {
             userClient.deleteUserByUsername(testContext.getLastCreatedUser().getUsername());
         }
+        if (testContext.getLastCreatedUsers() != null) {
+            testContext.getLastCreatedUsers().forEach(user -> userClient.deleteUserByUsername(user.getUsername()));
+        }
     }
 }

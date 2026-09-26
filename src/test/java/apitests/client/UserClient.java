@@ -6,6 +6,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
+import java.util.List;
+
 /**
  * Thin wrapper around the /user endpoints of the Swagger Petstore API.
  */
@@ -19,6 +21,26 @@ public class UserClient {
 
     public Response createUser(User user) {
         return request().body(user).post("/user");
+    }
+
+    public Response createUserWithRawBody(String rawJson) {
+        return request().body(rawJson).post("/user");
+    }
+
+    public Response createWithArray(List<User> users) {
+        return request().body(users).post("/user/createWithArray");
+    }
+
+    public Response createWithArrayRawBody(String rawJson) {
+        return request().body(rawJson).post("/user/createWithArray");
+    }
+
+    public Response createWithList(List<User> users) {
+        return request().body(users).post("/user/createWithList");
+    }
+
+    public Response createWithListRawBody(String rawJson) {
+        return request().body(rawJson).post("/user/createWithList");
     }
 
     public Response getUserByUsername(String username) {

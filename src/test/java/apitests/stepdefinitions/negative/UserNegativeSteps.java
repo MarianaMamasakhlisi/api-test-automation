@@ -22,4 +22,19 @@ public class UserNegativeSteps {
     public void iDeleteAUserWithUsername(String username) {
         testContext.setLastResponse(userClient.deleteUserByUsername(username));
     }
+
+    @When("I send a malformed create user request")
+    public void iSendAMalformedCreateUserRequest() {
+        testContext.setLastResponse(userClient.createUserWithRawBody("{not-valid-json"));
+    }
+
+    @When("I send a malformed create-with-array request")
+    public void iSendAMalformedCreateWithArrayRequest() {
+        testContext.setLastResponse(userClient.createWithArrayRawBody("{not-an-array"));
+    }
+
+    @When("I send a malformed create-with-list request")
+    public void iSendAMalformedCreateWithListRequest() {
+        testContext.setLastResponse(userClient.createWithListRawBody("{not-a-list"));
+    }
 }

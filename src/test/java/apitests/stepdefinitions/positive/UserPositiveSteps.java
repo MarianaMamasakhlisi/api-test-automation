@@ -8,6 +8,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -90,6 +91,20 @@ public class UserPositiveSteps {
     @Then("the response should include a rate limit header")
     public void theResponseShouldIncludeARateLimitHeader() {
         assertThat(testContext.getLastResponse().getHeader("X-Rate-Limit"), notNullValue());
+    }
+
+    @When("I create multiple users using the array endpoint")
+    public void iCreateMultipleUsersUsingTheArrayEndpoint() {
+        List<User> users = List.of(newUser(), newUser());
+        testContext.setLastResponse(userClient.createWithArray(users));
+        testContext.setLastCreatedUsers(users);
+    }
+
+    @When("I create multiple users using the list endpoint")
+    public void iCreateMultipleUsersUsingTheListEndpoint() {
+        List<User> users = List.of(newUser(), newUser());
+        testContext.setLastResponse(userClient.createWithList(users));
+        testContext.setLastCreatedUsers(users);
     }
 
     private User newUser() {

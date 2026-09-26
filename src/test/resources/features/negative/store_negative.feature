@@ -12,3 +12,18 @@ Feature: Store order operations - negative scenarios
     When I delete an order with id 999999999
     Then the response status code should be 404
     And the response body message should be "Order Not Found"
+
+  Scenario: Retrieving an order with a non-numeric id
+    When I request an order with a non-numeric id
+    Then the response status code should be 404
+    And the response body message should contain "NumberFormatException"
+
+  Scenario: Deleting an order with a non-numeric id
+    When I delete an order with a non-numeric id
+    Then the response status code should be 404
+    And the response body message should contain "NumberFormatException"
+
+  Scenario: Placing an order with a malformed request body
+    When I place an order with a malformed request body
+    Then the response status code should be 400
+    And the response body message should be "bad input"

@@ -32,3 +32,11 @@ Feature: User account operations - positive scenarios
     And the response should include a rate limit header
     When I log out
     Then the response status code should be 200
+
+  Scenario: Create multiple users in a single request via the array endpoint
+    When I create multiple users using the array endpoint
+    Then the response status code should be 200
+
+  Scenario: Create multiple users in a single request via the list endpoint
+    When I create multiple users using the list endpoint
+    Then the response status code should be 200

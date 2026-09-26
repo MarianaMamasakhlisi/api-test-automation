@@ -22,4 +22,19 @@ public class StoreNegativeSteps {
     public void iDeleteAnOrderWithId(long id) {
         testContext.setLastResponse(orderClient.deleteOrderById(id));
     }
+
+    @When("I request an order with a non-numeric id")
+    public void iRequestAnOrderWithANonNumericId() {
+        testContext.setLastResponse(orderClient.getOrderById("notanumber"));
+    }
+
+    @When("I delete an order with a non-numeric id")
+    public void iDeleteAnOrderWithANonNumericId() {
+        testContext.setLastResponse(orderClient.deleteOrderById("notanumber"));
+    }
+
+    @When("I place an order with a malformed request body")
+    public void iPlaceAnOrderWithAMalformedRequestBody() {
+        testContext.setLastResponse(orderClient.placeOrderWithRawBody("{not-valid-json"));
+    }
 }

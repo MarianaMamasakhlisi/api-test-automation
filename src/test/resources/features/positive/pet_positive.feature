@@ -48,3 +48,23 @@ Feature: Pet CRUD operations - positive scenarios
     When I upload an image for that pet
     Then the response status code should be 200
     And the response body message should contain "File uploaded"
+
+  Scenario: Find pets matching either of two statuses
+    When I search for pets with statuses "available" and "pending"
+    Then the response status code should be 200
+    And every pet in the response should have status "available" or "pending"
+
+  Scenario: Searching for pets with an unknown status returns no results
+    When I search for pets with an unknown status
+    Then the response status code should be 200
+    And the response should be an empty list
+
+  Scenario: Searching for pets with a tag that does not exist returns no results
+    When I search for pets with a tag that does not exist
+    Then the response status code should be 200
+    And the response should be an empty list
+
+  Scenario: Updating a pet id that was never created acts as an upsert
+    When I update a pet id that was never created with name "Phantom" and status "available"
+    Then the response status code should be 200
+    And requesting that pet again should return name "Phantom" and status "available"

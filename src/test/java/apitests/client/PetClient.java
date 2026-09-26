@@ -7,6 +7,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Thin wrapper around the /pet endpoints of the Swagger Petstore API.
@@ -44,8 +45,16 @@ public class PetClient {
         return request().delete("/pet/{id}", id);
     }
 
+    public Response deletePetById(String id) {
+        return request().delete("/pet/{id}", id);
+    }
+
     public Response findByStatus(String status) {
         return request().queryParam("status", status).get("/pet/findByStatus");
+    }
+
+    public Response findByStatus(List<String> statuses) {
+        return request().queryParam("status", statuses).get("/pet/findByStatus");
     }
 
     public Response findByTags(String tag) {

@@ -28,7 +28,7 @@ src/test/java/apitests/
 src/test/resources/
   features/positive/            Happy-path Gherkin scenarios (pet, store, user)
   features/negative/            Negative/error-path Gherkin scenarios (pet, store, user)
-  uploads/sample-photo.txt      Fixture file used by the image-upload scenario
+  uploads/sample-photo.png      Fixture file used by the image-upload scenario
   config.properties             baseUri
   allure.properties             Allure results directory
 ```
@@ -73,21 +73,24 @@ was sent and received.
 
 ## What's covered
 
-25 scenarios across the three resource groups of the API.
+39 scenarios across the three resource groups of the API — every endpoint in the Swagger Petstore spec.
 
 **`/pet`** (`features/positive|negative/pet_*.feature`)
 - Create, read, update (JSON and form-data), delete
-- Search by status and by tag
+- Search by status (single and multiple values), search by tag
 - Image upload
-- Negative: non-existent pet on read/delete/form-update, malformed JSON body
+- Negative: non-existent pet on read/delete/form-update, non-numeric id on read/delete, malformed JSON body
+- Edge cases: unknown status/tag returns an empty list (not an error); `PUT` on an id that was never created
+  acts as an upsert
 
 **`/store`** (`features/positive|negative/store_*.feature`)
 - Inventory lookup, place an order, read an order, delete an order
-- Negative: non-existent order on read/delete
+- Negative: non-existent order on read/delete, non-numeric order id, malformed JSON body
 
 **`/user`** (`features/positive|negative/user_*.feature`)
 - Create, read, update, delete, login (with rate-limit header check), logout
-- Negative: non-existent user on read/delete
+- Bulk create via `createWithArray` and `createWithList`
+- Negative: non-existent user on read/delete, malformed JSON body on create/createWithArray/createWithList
 
 Each scenario validates the HTTP status code, and where relevant, the response `Content-Type` header, response
 headers (e.g. `X-Rate-Limit` on login), and body content (field values or error messages).
@@ -95,10 +98,15 @@ headers (e.g. `X-Rate-Limit` on login), and body content (field values or error 
 ## Notes
 
 - The public Petstore server is shared by everyone running this suite, so pet/order ids and usernames are
-  randomised per run to avoid collisions, and `Hooks` best-effort deletes any pet, order or user a scenario created.
-- The server is lenient about its own spec in places — e.g. `POST /pet` without a `name` still returns 200, and
+  randomised per run to avoid collisions, and `Hooks` best-effort deletes any pet, order or user (or users, for the
+  bulk-create scenarios) a scenario created.
+- The server is lenient about its own spec in most places — e.g. `POST /pet` without a `name` still returns 200,
+  `PUT /pet` and `PUT /user/{username}` upsert rather than requiring the record to already exist, and
   `GET /user/login` "succeeds" for any username/password. Negative scenarios are built around behaviour the server
-  actually enforces (malformed JSON, non-existent resources), verified by hand against the live API before being
-  automated.
+  actually enforces: malformed JSON bodies, non-existent resources, and non-numeric path ids — each verified by hand
+  against the live API before being automated.
+- Malformed JSON is rejected differently depending on the endpoint: `400 "bad input"` on `/pet`, `/store/order` and
+  `/user`, but `500 "something bad happened"` on `/user/createWithArray` and `/user/createWithList` — again, the
+  real server's behaviour, not an inconsistency in the tests.
 - The two "not found" error responses for orders differ in message casing depending on the HTTP verb
-  (`"Order not found"` on GET vs. `"Order Not Found"` on DELETE) — this is the real server's behaviour, not a typo.
+  (`"Order not found"` on GET vs. `"Order Not Found"` on DELETE) — also the real server's behaviour, not a typo.

@@ -25,11 +25,23 @@ public class OrderClient {
         return request().body(order).post("/store/order");
     }
 
+    public Response placeOrderWithRawBody(String rawJson) {
+        return request().body(rawJson).post("/store/order");
+    }
+
     public Response getOrderById(long id) {
         return request().get("/store/order/{id}", id);
     }
 
+    public Response getOrderById(String id) {
+        return request().get("/store/order/{id}", id);
+    }
+
     public Response deleteOrderById(long id) {
+        return request().delete("/store/order/{id}", id);
+    }
+
+    public Response deleteOrderById(String id) {
         return request().delete("/store/order/{id}", id);
     }
 }

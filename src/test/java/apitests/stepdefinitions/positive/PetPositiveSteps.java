@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasProperty;
@@ -112,10 +113,42 @@ public class PetPositiveSteps {
         testContext.setLastResponse(petClient.uploadImage(id, sampleImageFile()));
     }
 
-    @Then("the response body message should contain {string}")
-    public void theResponseBodyMessageShouldContain(String expectedFragment) {
-        String actualMessage = testContext.getLastResponse().jsonPath().getString("message");
-        assertThat(actualMessage, containsString(expectedFragment));
+    @When("I search for pets with statuses {string} and {string}")
+    public void iSearchForPetsWithStatuses(String status1, String status2) {
+        testContext.setLastResponse(petClient.findByStatus(List.of(status1, status2)));
+    }
+
+    @Then("every pet in the response should have status {string} or {string}")
+    public void everyPetInTheResponseShouldHaveStatusOr(String status1, String status2) {
+        Pet[] pets = testContext.getLastResponse().as(Pet[].class);
+        assertThat(List.of(pets), everyItem(anyOf(
+                hasProperty("status", equalTo(status1)),
+                hasProperty("status", equalTo(status2)))));
+    }
+
+    @When("I search for pets with an unknown status")
+    public void iSearchForPetsWithAnUnknownStatus() {
+        testContext.setLastResponse(petClient.findByStatus("not_a_real_status_xyz"));
+    }
+
+    @When("I search for pets with a tag that does not exist")
+    public void iSearchForPetsWithATagThatDoesNotExist() {
+        testContext.setLastResponse(petClient.findByTags("no_such_tag_xyz"));
+    }
+
+    @Then("the response should be an empty list")
+    public void theResponseShouldBeAnEmptyList() {
+        Pet[] pets = testContext.getLastResponse().as(Pet[].class);
+        assertThat(pets, emptyArray());
+    }
+
+    // PUT on an id that was never created still returns 200 and stores the pet -
+    // this server treats /pet updates as an upsert rather than requiring a prior create.
+    @When("I update a pet id that was never created with name {string} and status {string}")
+    public void iUpdateAPetIdThatWasNeverCreatedWithNameAndStatus(String name, String status) {
+        Pet pet = newPet(name, status);
+        testContext.setLastResponse(petClient.updatePet(pet));
+        testContext.setLastCreatedPet(pet);
     }
 
     private File sampleImageFile() {

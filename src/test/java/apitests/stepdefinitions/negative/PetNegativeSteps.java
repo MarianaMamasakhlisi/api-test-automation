@@ -32,4 +32,14 @@ public class PetNegativeSteps {
     public void iUpdateThePetWithIdViaFormDataToNameAndStatus(long id, String name, String status) {
         testContext.setLastResponse(petClient.updatePetWithForm(id, name, status));
     }
+
+    @When("I request a pet with a non-numeric id")
+    public void iRequestAPetWithANonNumericId() {
+        testContext.setLastResponse(petClient.getPetById("notanumber"));
+    }
+
+    @When("I delete a pet with a non-numeric id")
+    public void iDeleteAPetWithANonNumericId() {
+        testContext.setLastResponse(petClient.deletePetById("notanumber"));
+    }
 }

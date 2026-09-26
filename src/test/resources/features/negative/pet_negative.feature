@@ -20,3 +20,13 @@ Feature: Pet CRUD operations - negative scenarios
   Scenario: Updating a pet that does not exist via form data
     When I update the pet with id 999999999999 via form data to name "Ghost" and status "sold"
     Then the response status code should be 404
+
+  Scenario: Retrieving a pet with a non-numeric id
+    When I request a pet with a non-numeric id
+    Then the response status code should be 404
+    And the response body message should contain "NumberFormatException"
+
+  Scenario: Deleting a pet with a non-numeric id
+    When I delete a pet with a non-numeric id
+    Then the response status code should be 404
+    And the response body message should contain "NumberFormatException"
