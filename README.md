@@ -1,8 +1,8 @@
-# API Test Automation — Swagger Petstore
+# API Test Automation: Swagger Petstore
 
 REST API test suite for the [Swagger Petstore](https://petstore.swagger.io/#/) demo API, built with Java, Maven,
 RestAssured and Cucumber (Gherkin/BDD), run through the JUnit 5 platform. Covers all three resource groups of the
-API — `/pet`, `/store` and `/user`.
+API: `/pet`, `/store` and `/user`.
 
 ## Stack
 
@@ -37,8 +37,8 @@ src/test/resources/
 
 - JDK 17+
 - Maven 3.8+
-- Internet access to `https://petstore.swagger.io` (the tests run against the live public demo server — no local
-  service to start)
+- Internet access to `https://petstore.swagger.io`. The tests run against the live public demo server; there's no
+  local service to start.
 - (Optional, for a nicer local report) [Allure commandline](https://allurereport.org/docs/install/)
 
 ## Running the tests
@@ -57,8 +57,8 @@ mvn test -DbaseUri=https://your-petstore-instance/v2
 
 Every run produces two reports automatically, no extra steps required:
 
-- **Cucumber HTML report** — `target/cucumber-report/cucumber.html` (open directly in a browser)
-- **Allure results** — `target/allure-results` (raw results written on every run)
+- **Cucumber HTML report**: `target/cucumber-report/cucumber.html` (open directly in a browser)
+- **Allure results**: `target/allure-results` (raw results written on every run)
 
 To view the richer Allure report:
 
@@ -73,14 +73,14 @@ was sent and received.
 
 ## What's covered
 
-39 scenarios across the three resource groups of the API — every endpoint in the Swagger Petstore spec.
+39 scenarios across the three resource groups of the API, covering every endpoint in the Swagger Petstore spec.
 
 **`/pet`** (`features/positive|negative/pet_*.feature`)
 - Create, read, update (JSON and form-data), delete
 - Search by status (single and multiple values), search by tag
 - Image upload
 - Negative: non-existent pet on read/delete/form-update, non-numeric id on read/delete, malformed JSON body
-- Edge cases: unknown status/tag returns an empty list (not an error); `PUT` on an id that was never created
+- Edge cases: unknown status/tag returns an empty list rather than an error; `PUT` on an id that was never created
   acts as an upsert
 
 **`/store`** (`features/positive|negative/store_*.feature`)
@@ -100,13 +100,13 @@ headers (e.g. `X-Rate-Limit` on login), and body content (field values or error 
 - The public Petstore server is shared by everyone running this suite, so pet/order ids and usernames are
   randomised per run to avoid collisions, and `Hooks` best-effort deletes any pet, order or user (or users, for the
   bulk-create scenarios) a scenario created.
-- The server is lenient about its own spec in most places — e.g. `POST /pet` without a `name` still returns 200,
+- The server is lenient about its own spec in most places. `POST /pet` without a `name` still returns 200,
   `PUT /pet` and `PUT /user/{username}` upsert rather than requiring the record to already exist, and
   `GET /user/login` "succeeds" for any username/password. Negative scenarios are built around behaviour the server
-  actually enforces: malformed JSON bodies, non-existent resources, and non-numeric path ids — each verified by hand
+  actually enforces (malformed JSON bodies, non-existent resources, non-numeric path ids), each verified by hand
   against the live API before being automated.
 - Malformed JSON is rejected differently depending on the endpoint: `400 "bad input"` on `/pet`, `/store/order` and
-  `/user`, but `500 "something bad happened"` on `/user/createWithArray` and `/user/createWithList` — again, the
+  `/user`, but `500 "something bad happened"` on `/user/createWithArray` and `/user/createWithList`. That's the
   real server's behaviour, not an inconsistency in the tests.
 - The two "not found" error responses for orders differ in message casing depending on the HTTP verb
-  (`"Order not found"` on GET vs. `"Order Not Found"` on DELETE) — also the real server's behaviour, not a typo.
+  (`"Order not found"` on GET vs. `"Order Not Found"` on DELETE), also the real server's behaviour, not a typo.
