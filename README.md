@@ -22,7 +22,7 @@ src/test/java/apitests/
   client/                       RestAssured wrappers: PetClient, OrderClient, UserClient
   models/                       Pet, Category, Tag, Order, User request/response POJOs
   support/TestContext.java      Scenario-scoped state shared between steps and hooks
-  hooks/Hooks.java              Sets the base URI; deletes any pet/order/user a scenario created
+  hooks/Hooks.java              Deletes any pet/order/user a scenario created, after each scenario
   stepdefinitions/common/       Assertions shared by positive and negative scenarios
   stepdefinitions/positive/     Step definitions for the happy-path scenarios
   stepdefinitions/negative/     Step definitions for the error-path scenarios
