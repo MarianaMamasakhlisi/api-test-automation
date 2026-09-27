@@ -9,9 +9,6 @@ import io.restassured.specification.RequestSpecification;
 
 import java.util.List;
 
-/**
- * Thin wrapper around the /user endpoints of the Swagger Petstore API.
- */
 public class UserClient {
 
     private RequestSpecification request() {

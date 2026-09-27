@@ -6,9 +6,6 @@ import io.cucumber.java.en.Then;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-/**
- * Error-body assertion shared by pet, order and user negative scenarios.
- */
 public class ErrorResponseSteps {
 
     private final TestContext testContext;

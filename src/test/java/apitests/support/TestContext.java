@@ -7,10 +7,6 @@ import io.restassured.response.Response;
 
 import java.util.List;
 
-/**
- * Scenario-scoped state shared between step definitions and hooks.
- * Cucumber creates a fresh instance (via picocontainer) for every scenario.
- */
 public class TestContext {
 
     private Response lastResponse;

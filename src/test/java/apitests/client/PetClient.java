@@ -10,10 +10,6 @@ import io.restassured.specification.RequestSpecification;
 import java.io.File;
 import java.util.List;
 
-/**
- * Thin wrapper around the /pet endpoints of the Swagger Petstore API.
- * Keeps RestAssured request-building out of the step definitions.
- */
 public class PetClient {
 
     // baseUri is set per-request rather than on the shared static RestAssured config, so

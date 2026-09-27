@@ -16,10 +16,6 @@ public class Hooks {
     public Hooks(TestContext testContext) {
         this.testContext = testContext;
     }
-
-    // Best-effort cleanup so scenarios don't leave test data behind on the shared demo server.
-    // A record already removed by the scenario itself (e.g. the delete tests) simply 404s here,
-    // which is fine.
     @After
     public void cleanUp() {
         if (testContext.getLastCreatedPet() != null && testContext.getLastCreatedPet().getId() != null) {

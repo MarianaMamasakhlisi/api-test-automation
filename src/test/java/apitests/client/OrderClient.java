@@ -7,9 +7,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-/**
- * Thin wrapper around the /store endpoints of the Swagger Petstore API.
- */
 public class OrderClient {
 
     private RequestSpecification request() {
