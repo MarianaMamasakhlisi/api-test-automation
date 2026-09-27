@@ -1,5 +1,6 @@
 package apitests.client;
 
+import apitests.config.ApiConfig;
 import apitests.models.Order;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
@@ -13,6 +14,7 @@ public class OrderClient {
 
     private RequestSpecification request() {
         return RestAssured.given()
+                .baseUri(ApiConfig.baseUri())
                 .filter(new AllureRestAssured())
                 .contentType("application/json");
     }

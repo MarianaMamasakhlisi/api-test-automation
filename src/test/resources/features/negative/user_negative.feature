@@ -1,3 +1,4 @@
+@user @negative
 Feature: User account operations - negative scenarios
   As an API consumer of the Swagger Petstore
   I want invalid user requests to fail clearly

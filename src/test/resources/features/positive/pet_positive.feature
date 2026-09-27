@@ -1,20 +1,25 @@
+@pet @positive
 Feature: Pet CRUD operations - positive scenarios
   As an API consumer of the Swagger Petstore
   I want to create, read, update and delete pets
   So that I can manage the pet catalog through the REST API
 
+  @smoke
   Scenario: Create a new pet
     When I create a pet named "Buddy" with status "available"
     Then the response status code should be 200
     And the response content type should be "application/json"
     And the response pet should have name "Buddy" and status "available"
+    And the response should match the pet schema
 
+  @smoke
   Scenario: Retrieve an existing pet by id
     Given a pet named "Rex" with status "available" has been created
     When I request that pet by its id
     Then the response status code should be 200
     And the response pet should have name "Rex" and status "available"
 
+  @smoke
   Scenario: Update an existing pet's name and status
     Given a pet named "Max" with status "available" has been created
     When I update that pet's name to "Max the Second" and status to "sold"
@@ -22,6 +27,7 @@ Feature: Pet CRUD operations - positive scenarios
     And the response pet should have name "Max the Second" and status "sold"
     And requesting that pet again should return name "Max the Second" and status "sold"
 
+  @smoke
   Scenario: Delete an existing pet
     Given a pet named "Bella" with status "available" has been created
     When I delete that pet

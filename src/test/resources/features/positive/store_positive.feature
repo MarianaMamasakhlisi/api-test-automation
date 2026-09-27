@@ -1,13 +1,16 @@
+@store @positive
 Feature: Store order operations - positive scenarios
   As an API consumer of the Swagger Petstore
   I want to place and manage orders
   So that customers can buy pets through the store
 
+  @smoke
   Scenario: Retrieve store inventory
     When I request the store inventory
     Then the response status code should be 200
     And the inventory should report a count for status "available"
 
+  @smoke
   Scenario: Place a new order
     When I place an order for pet id 12345 with quantity 2
     Then the response status code should be 200
@@ -18,6 +21,7 @@ Feature: Store order operations - positive scenarios
     When I request that order by its id
     Then the response status code should be 200
 
+  @smoke
   Scenario: Delete an order
     Given an order for pet id 12345 with quantity 1 has been placed
     When I delete that order

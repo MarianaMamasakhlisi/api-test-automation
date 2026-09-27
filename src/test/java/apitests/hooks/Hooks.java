@@ -3,11 +3,8 @@ package apitests.hooks;
 import apitests.client.OrderClient;
 import apitests.client.PetClient;
 import apitests.client.UserClient;
-import apitests.config.ApiConfig;
 import apitests.support.TestContext;
 import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.restassured.RestAssured;
 
 public class Hooks {
 
@@ -18,11 +15,6 @@ public class Hooks {
 
     public Hooks(TestContext testContext) {
         this.testContext = testContext;
-    }
-
-    @Before
-    public void setUp() {
-        RestAssured.baseURI = ApiConfig.baseUri();
     }
 
     // Best-effort cleanup so scenarios don't leave test data behind on the shared demo server.

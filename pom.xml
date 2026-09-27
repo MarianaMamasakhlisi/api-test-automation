@@ -62,6 +62,13 @@
             <artifactId>junit-platform-launcher</artifactId>
             <version>${junit-platform.version}</version>
         </dependency>
+        <!-- cucumber-junit-platform-engine pulls an older junit-platform-engine transitively;
+             pin it explicitly so the whole JUnit Platform stack is on one consistent version. -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <version>${junit-platform.version}</version>
+        </dependency>
 
         <!-- API client + assertions -->
         <dependency>
@@ -73,6 +80,11 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>${rest-assured.version}</version>
         </dependency>
 
         <!-- Reporting -->

@@ -1,5 +1,6 @@
 package apitests.client;
 
+import apitests.config.ApiConfig;
 import apitests.models.Pet;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
@@ -15,8 +16,11 @@ import java.util.List;
  */
 public class PetClient {
 
+    // baseUri is set per-request rather than on the shared static RestAssured config, so
+    // scenarios stay independent of each other and can safely run in parallel.
     private RequestSpecification request() {
         return RestAssured.given()
+                .baseUri(ApiConfig.baseUri())
                 .filter(new AllureRestAssured())
                 .contentType("application/json");
     }
@@ -62,8 +66,7 @@ public class PetClient {
     }
 
     public Response updatePetWithForm(long id, String name, String status) {
-        return RestAssured.given()
-                .filter(new AllureRestAssured())
+        return request()
                 .contentType("application/x-www-form-urlencoded")
                 .formParam("name", name)
                 .formParam("status", status)
@@ -71,8 +74,8 @@ public class PetClient {
     }
 
     public Response uploadImage(long id, File file) {
-        return RestAssured.given()
-                .filter(new AllureRestAssured())
+        return request()
+                .contentType("multipart/form-data")
                 .multiPart("file", file)
                 .post("/pet/{id}/uploadImage", id);
     }

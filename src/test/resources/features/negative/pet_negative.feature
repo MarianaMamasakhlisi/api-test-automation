@@ -1,3 +1,4 @@
+@pet @negative
 Feature: Pet CRUD operations - negative scenarios
   As an API consumer of the Swagger Petstore
   I want invalid requests to fail clearly

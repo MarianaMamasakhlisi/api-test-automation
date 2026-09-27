@@ -1,12 +1,15 @@
+@user @positive
 Feature: User account operations - positive scenarios
   As an API consumer of the Swagger Petstore
   I want to manage user accounts and sessions
   So that customers can register and sign in
 
+  @smoke
   Scenario: Create a new user
     When I create a user with a unique username
     Then the response status code should be 200
 
+  @smoke
   Scenario: Retrieve a user by username
     Given a user has been created
     When I request that user by username
@@ -19,6 +22,7 @@ Feature: User account operations - positive scenarios
     Then the response status code should be 200
     And requesting that user again should return first name "Updated"
 
+  @smoke
   Scenario: Delete a user
     Given a user has been created
     When I delete that user

@@ -1,3 +1,4 @@
+@store @negative
 Feature: Store order operations - negative scenarios
   As an API consumer of the Swagger Petstore
   I want invalid order requests to fail clearly

@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.emptyArray;
@@ -68,6 +69,12 @@ public class PetPositiveSteps {
         long id = testContext.getLastCreatedPet().getId();
         Response response = petClient.getPetById(id);
         assertThat(response.statusCode(), equalTo(expectedStatus));
+    }
+
+    @Then("the response should match the pet schema")
+    public void theResponseShouldMatchThePetSchema() {
+        testContext.getLastResponse().then().assertThat()
+                .body(matchesJsonSchemaInClasspath("schemas/pet-schema.json"));
     }
 
     @Then("the response pet should have name {string} and status {string}")

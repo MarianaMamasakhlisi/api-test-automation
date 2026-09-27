@@ -7,10 +7,11 @@ API: `/pet`, `/store` and `/user`.
 ## Stack
 
 - Java 17, Maven
-- Cucumber 7 (`cucumber-java`) + `cucumber-junit-platform-engine`
-- RestAssured 5
+- Cucumber 7 (`cucumber-java`) + `cucumber-junit-platform-engine`, scenarios run in parallel
+- RestAssured 5, with JSON Schema validation for response bodies
 - Jackson (for request/response (de)serialization)
 - Allure + Cucumber's own HTML report
+- GitHub Actions CI on every push and pull request
 
 ## Project layout
 
@@ -28,9 +29,12 @@ src/test/java/apitests/
 src/test/resources/
   features/positive/            Happy-path Gherkin scenarios (pet, store, user)
   features/negative/            Negative/error-path Gherkin scenarios (pet, store, user)
+  schemas/pet-schema.json       JSON Schema used to validate pet response bodies
   uploads/sample-photo.png      Fixture file used by the image-upload scenario
   config.properties             baseUri
   allure.properties             Allure results directory
+  junit-platform.properties     Parallel execution settings
+.github/workflows/ci.yml        Runs the suite on every push and pull request
 ```
 
 ## Prerequisites
@@ -53,6 +57,19 @@ Point the suite at a different environment without touching the code:
 mvn test -DbaseUri=https://your-petstore-instance/v2
 ```
 
+Scenarios run in parallel (3 at a time by default, configured in `junit-platform.properties`), which brings the
+full run down to well under a minute.
+
+### Running a subset
+
+Every scenario is tagged by resource (`@pet`, `@store`, `@user`) and outcome (`@positive`, `@negative`), and the
+core CRUD scenarios are also tagged `@smoke`. Run just what you need with Cucumber's tag expressions:
+
+```bash
+mvn test -Dcucumber.filter.tags="@smoke"
+mvn test -Dcucumber.filter.tags="@pet and @negative"
+```
+
 ## Test reports
 
 Every run produces two reports automatically, no extra steps required:
@@ -71,6 +88,11 @@ mvn allure:report      # writes target/site/allure-maven-plugin/index.html
 Every RestAssured call is attached to Allure as a request/response step, so a failing scenario shows exactly what
 was sent and received.
 
+## Continuous integration
+
+`.github/workflows/ci.yml` runs the full suite on every push and pull request against `main`, and uploads the
+Cucumber and Allure reports as build artifacts regardless of outcome.
+
 ## What's covered
 
 39 scenarios across the three resource groups of the API, covering every endpoint in the Swagger Petstore spec.
@@ -79,6 +101,7 @@ was sent and received.
 - Create, read, update (JSON and form-data), delete
 - Search by status (single and multiple values), search by tag
 - Image upload
+- The created pet's response body is validated against `schemas/pet-schema.json`, not just individual fields
 - Negative: non-existent pet on read/delete/form-update, non-numeric id on read/delete, malformed JSON body
 - Edge cases: unknown status/tag returns an empty list rather than an error; `PUT` on an id that was never created
   acts as an upsert
